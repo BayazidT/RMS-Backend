@@ -1,72 +1,63 @@
+// src/main/java/com/tr/rms/security/jwt/JwtService.java
 package com.tr.rms.security.jwt;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Service;
+import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
+@Service
 public class JwtService {
 
-    private final JwtProperties props;
+    private static final String SECRET_KEY = "dGhpbmdyb2Fkb3VydHdpY2VzYXdtdXN0c3RyZWV0eW91dGhzaGVsdGVyZmxvd2Vyd2g=";
 
-    public String generateAccessToken(UserDetails user) {
-        Set<String> roles = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .filter(a -> a.startsWith("ROLE_"))
-                .map(a -> a.substring(5))
-                .collect(Collectors.toSet());
-
-        Set<String> permissions = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .filter(a -> !a.startsWith("ROLE_"))
-                .collect(Collectors.toSet());
-
-        return Jwts.builder()
-                .subject(user.getUsername())
-                .claim("roles", roles)
-                .claim("permissions", permissions)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + props.accessExpiration()))
-                .signWith(Keys.hmacShaKeyFor(props.secret().getBytes()))
-                .compact();
+    private SecretKey getSigningKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateRefreshToken(UserDetails user) {
+    public String generateToken(UserDetails user) {
         return Jwts.builder()
                 .subject(user.getUsername())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + props.refreshExpiration()))
-                .signWith(Keys.hmacShaKeyFor(props.secret().getBytes()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS384)
                 .compact();
-    }
-
-    public Claims extractClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(props.secret().getBytes()))
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
     }
 
     public String extractUsername(String token) {
-        return extractClaims(token).getSubject();
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+        return (username != null && username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {
-        return extractClaims(token).getExpiration().before(new Date());
+        try {
+            return Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (Exception e) {
+            return true;
+        }
     }
 }
