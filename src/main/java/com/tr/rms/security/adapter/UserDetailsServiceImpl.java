@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = (User) userRepository.findByUsernameAndDeletedFalse(username)
+        User user = (User) userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         Set<GrantedAuthority> authorities = roleRepository.findActiveByUserId(user.getId()).stream()
@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)
-                .disabled(!user.isActive() || user.isDeleted())
+//                .disabled(!user.isActive() || user.isDeleted())
                 .build();
     }
 }

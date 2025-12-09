@@ -1,5 +1,5 @@
 // src/main/java/com/tr/rms/modules/auth/dto/RolePermissionResponse.java
-package com.tr.rms.modules.auth.dto;
+package com.tr.rms.security.auth.dto;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
