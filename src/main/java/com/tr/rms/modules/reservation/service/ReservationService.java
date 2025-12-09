@@ -27,8 +27,6 @@ public class ReservationService {
     @Transactional
     public ReservationResponse create(ReservationRequest request, Authentication auth) {
         User user = getCurrentUser(auth);
-        System.out.println(user);
-
         // Check if table is free
         boolean tableTaken = reservationRepository.findByDateAndTable(request.reservationDate(), request.tableNumber())
                 .stream()

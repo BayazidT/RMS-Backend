@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/reservations")
+@RequestMapping("/api/v1/private/reservations")
 @RequiredArgsConstructor
 public class ReservationController {
 
