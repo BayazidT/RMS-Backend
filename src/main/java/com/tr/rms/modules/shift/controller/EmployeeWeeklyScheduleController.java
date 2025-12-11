@@ -17,7 +17,14 @@ public class EmployeeWeeklyScheduleController {
 
     @PostMapping("/{userId}/weekly-schedule")
     public ResponseEntity<WeeklyScheduleResponse> weeklySchedule(@PathVariable UUID userId, @RequestBody WeeklyScheduleRequest request) {
-        WeeklyScheduleResponse weeklyScheduleResponse = employeeWeeklyScheduleService.create(userId, request);
+        WeeklyScheduleResponse weeklyScheduleResponse = employeeWeeklyScheduleService.createOrUpdate(userId, request);
         return ResponseEntity.ok(weeklyScheduleResponse);
+    }
+
+    @GetMapping("/{userId}/weekly-schedule")
+    public ResponseEntity<WeeklyScheduleResponse> weeklySchedule(@PathVariable UUID userId) {
+        WeeklyScheduleResponse weeklyScheduleResponse = employeeWeeklyScheduleService.getWeeklySchedule(userId);
+        return ResponseEntity.ok(weeklyScheduleResponse);
+
     }
 }

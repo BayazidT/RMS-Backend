@@ -1,5 +1,3 @@
 package com.tr.rms.modules.shift.dto;
 
-public record WeeklyScheduleResponse (
-
-){}
+public record WeeklyScheduleResponse(WeeklyScheduleRequest schedule) { }

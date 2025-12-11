@@ -1,5 +1,7 @@
 package com.tr.rms.modules.shift.dto;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalTime;
 import java.util.UUID;
 // 1. DTO for the weekly pattern (what you edit once per employee)
@@ -21,5 +23,5 @@ public record WeeklyScheduleRequest(
             LocalTime endTime,              // null = frei
             boolean isOff,                   // true = frei
             String  displayText             // "10:00 – 18:00 Uhr" oder "Frei"
-    ) {}
+    ) { }
 }
