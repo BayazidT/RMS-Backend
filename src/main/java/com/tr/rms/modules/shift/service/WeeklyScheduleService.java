@@ -10,13 +10,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeWeeklyScheduleService {
+public class WeeklyScheduleService {
 
     private final WeeklyScheduleRepository weeklyScheduleRepository;
 
