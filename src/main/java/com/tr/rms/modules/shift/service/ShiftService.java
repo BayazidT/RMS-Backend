@@ -6,12 +6,15 @@ import com.tr.rms.modules.shift.dto.ShiftResponse;
 import com.tr.rms.modules.shift.entity.Shift;
 import com.tr.rms.modules.shift.repository.ShiftRepository;
 import com.tr.rms.modules.user.entity.User;
+import com.tr.rms.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +22,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShiftService {
     private final ShiftRepository shiftRepository;
+    private final UserRepository userRepository;
+
     public ShiftResponse create(ShiftRequest shiftRequest, UUID userId) {
         return toResponse(shiftRepository.save(mapToShiftEntity(shiftRequest,userId)));
     }
@@ -52,6 +57,15 @@ public class ShiftService {
     }
 
     public String createShifts() {
+        List<User> users =  userRepository.findAll();
+        for (User user : users) {
+            Shift shift = new Shift();
+            shift.setId(UUID.randomUUID());
+            shift.setUser(user);
+            shift.setShiftDate(LocalDate.now());
+            shift.setStartTime(null);
+            shiftRepository.save(shift);
+        }
         return "Created shift for today";
 
     }
