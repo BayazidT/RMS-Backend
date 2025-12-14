@@ -18,9 +18,10 @@ public class ShiftController {
     private final ShiftService shiftService;
 
 
-    @PostMapping("/")
-    public ResponseEntity<String> create() {
-        return ResponseEntity.ok(shiftService.createShifts());
+    @PostMapping("/create")
+    public ResponseEntity<String> create(@RequestBody ShiftRequest req) {
+        System.out.println("Called!");
+        return ResponseEntity.ok(shiftService.createShifts(req));
     }
 
     @GetMapping("/today")

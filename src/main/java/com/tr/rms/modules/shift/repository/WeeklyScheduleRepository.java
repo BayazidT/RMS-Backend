@@ -19,4 +19,6 @@ public interface WeeklyScheduleRepository extends JpaRepository<WeeklySchedule, 
     @Query("DELETE FROM WeeklySchedule w WHERE w.user.id = :userId")
     void deleteAllByUserId(UUID userId);
 
+    @Query("SELECT r FROM WeeklySchedule r WHERE r.dayOfWeek = :dayOfWeek")
+    List<WeeklySchedule> findAllToday(int dayOfWeek);
 }
