@@ -8,7 +8,6 @@ import com.tr.rms.modules.shift.entity.WeeklySchedule;
 import com.tr.rms.modules.shift.repository.ShiftRepository;
 import com.tr.rms.modules.shift.repository.WeeklyScheduleRepository;
 import com.tr.rms.modules.user.entity.User;
-import com.tr.rms.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +27,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ShiftService {
     private final ShiftRepository shiftRepository;
-    private final UserRepository userRepository;
     private final WeeklyScheduleRepository weeklyScheduleRepository;
 
     public ShiftResponse create(ShiftRequest shiftRequest, UUID userId) {
@@ -63,9 +62,10 @@ public class ShiftService {
     }
 
     public String createShifts(ShiftRequest req) {
-        List<User> users =  userRepository.findAll();
-
-        List<WeeklySchedule> weeklySchedules =weeklyScheduleRepository.findAllToday(getDayOfWeek(req.shiftDate()));
+        List<WeeklySchedule> weeklySchedules =weeklyScheduleRepository.findAllToday(getDayOfWeek(req.shiftDate()), false);
+        if(weeklySchedules.size()==0){
+            throw new EmptyStackException();
+        }
         List<Shift> shifts = new ArrayList<>();
         for (WeeklySchedule weeklySchedule : weeklySchedules) {
             Shift shift = new Shift();
