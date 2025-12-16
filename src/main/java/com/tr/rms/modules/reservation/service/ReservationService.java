@@ -8,6 +8,9 @@ import com.tr.rms.modules.reservation.repository.ReservationRepository;
 import com.tr.rms.modules.user.entity.User;
 import com.tr.rms.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -102,10 +105,19 @@ public class ReservationService {
         );
     }
 
-    public List<ReservationResponse> getReservations() {
-        return reservationRepository.findAll()
+    public ReservationListResponse getReservations(int page, int size) {
+        page--;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Reservation> reservations = reservationRepository.findAll(pageable);
+        return new ReservationListResponse(reservations
                 .stream()
                 .map(r -> mapToResponse(r, r.getUser().getUsername()))
-                .toList();
+                .toList(),
+                reservations.getTotalElements(),
+                reservations.getTotalPages(),
+                reservations.getNumber(),
+                reservations.getSize(),
+                reservations.isFirst(),
+                reservations.isLast());
     }
 }

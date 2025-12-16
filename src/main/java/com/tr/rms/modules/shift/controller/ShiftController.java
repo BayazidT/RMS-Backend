@@ -26,7 +26,7 @@ public class ShiftController {
 
     @GetMapping("/today")
     public ShiftListResponse getTodayShifts(
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         return shiftService.getShifts(page, size);

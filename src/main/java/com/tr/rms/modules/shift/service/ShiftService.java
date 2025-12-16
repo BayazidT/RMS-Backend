@@ -50,7 +50,7 @@ public class ShiftService {
         User user = new User();
         user.setId(userId);
         Shift shift = new Shift();
-        shift.setUser(user); // lightweight reference
+        shift.setUser(user);
         shift.setShiftDate(req.shiftDate());
         shift.setStartTime(req.startTime());
         shift.setEndTime(req.endTime());
@@ -87,6 +87,7 @@ public class ShiftService {
     }
 
     public ShiftListResponse getShifts(int page, int size) {
+        page--;
 
         Pageable pageable = PageRequest.of(page, size);
         Page<Shift> shiftPage = shiftRepository.findAllToday(pageable);
@@ -99,7 +100,7 @@ public class ShiftService {
         return new ShiftListResponse(
                 shiftPage.getTotalElements(),
                 shiftPage.getTotalPages(),
-                page,
+                page+1,
                 size,
                 responses
         );

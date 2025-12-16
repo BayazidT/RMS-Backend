@@ -1,5 +1,6 @@
 package com.tr.rms.modules.user.controller;
 
+import com.tr.rms.modules.user.dto.UserListResponse;
 import com.tr.rms.modules.user.dto.UserRequest;
 import com.tr.rms.modules.user.dto.UserResponse;
 import com.tr.rms.modules.user.service.UserService;
@@ -23,8 +24,9 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserResponse> getAll() {
-        return userService.getAll();
+    public UserListResponse getAll(@RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "2") int size) {
+        return userService.getAll(page, size);
     }
 
     @GetMapping("/{id}")

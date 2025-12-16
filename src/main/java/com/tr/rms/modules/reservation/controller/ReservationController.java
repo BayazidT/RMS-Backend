@@ -32,8 +32,9 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponse>> get(){
-        return ResponseEntity.ok(service.getReservations());
+    public ResponseEntity<ReservationListResponse> get(@RequestParam(defaultValue = "1") int page,
+                                                       @RequestParam(defaultValue = "2") int size){
+        return ResponseEntity.ok(service.getReservations(page, size));
     }
 
     @GetMapping("/today")
