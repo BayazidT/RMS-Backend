@@ -1,5 +1,6 @@
 package com.tr.rms.modules.user.service;
 
+import com.tr.rms.exception.DataNotFoundException;
 import com.tr.rms.modules.user.dto.UserListResponse;
 import com.tr.rms.modules.user.dto.UserRequest;
 import com.tr.rms.modules.user.dto.UserResponse;
@@ -45,14 +46,14 @@ public class UserService {
     }
 
     public UserResponse getById(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findActiveUserById(id)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
         return mapper.toResponse(user);
     }
 
     public UserResponse update(UUID id, UserRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findActiveUserById(id)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
 
         mapper.updateEntity(user, request);
 
@@ -60,6 +61,9 @@ public class UserService {
     }
 
     public void delete(UUID id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findActiveUserById(id).orElseThrow(() -> new DataNotFoundException("User not found"));
+        user.setDeleted(true);
+        user.setActive(false);
+        userRepository.save(user);
     }
 }

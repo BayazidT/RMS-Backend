@@ -32,10 +32,18 @@ public class ReservationController {
     }
 
     @GetMapping
-    public ResponseEntity<ReservationListResponse> get(@RequestParam(defaultValue = "1") int page,
-                                                       @RequestParam(defaultValue = "2") int size){
-        return ResponseEntity.ok(service.getReservations(page, size));
+    public ResponseEntity<ReservationListResponse> get(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) ReservationStatus status,
+            @RequestParam(required = false) LocalDate reservationDate,
+            @RequestParam(required = false) String search
+    ) {
+        return ResponseEntity.ok(
+                service.getReservations(page, size, status, reservationDate, search)
+        );
     }
+
 
     @GetMapping("/today")
     public ResponseEntity<List<ReservationResponse>> today() {

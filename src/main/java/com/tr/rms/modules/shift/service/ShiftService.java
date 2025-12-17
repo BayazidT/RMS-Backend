@@ -1,5 +1,6 @@
 package com.tr.rms.modules.shift.service;
 
+import com.tr.rms.exception.DataNotFoundException;
 import com.tr.rms.modules.shift.dto.ShiftListResponse;
 import com.tr.rms.modules.shift.dto.ShiftRequest;
 import com.tr.rms.modules.shift.dto.ShiftResponse;
@@ -64,7 +65,7 @@ public class ShiftService {
     public String createShifts(ShiftRequest req) {
         List<WeeklySchedule> weeklySchedules =weeklyScheduleRepository.findAllToday(getDayOfWeek(req.shiftDate()), false);
         if(weeklySchedules.size()==0){
-            throw new EmptyStackException();
+            throw new DataNotFoundException("No active weekly schedules found for the selected date");
         }
         List<Shift> shifts = new ArrayList<>();
         for (WeeklySchedule weeklySchedule : weeklySchedules) {

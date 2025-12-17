@@ -1,16 +1,19 @@
 // src/main/java/com/tr/rms/modules/reservation/service/ReservationService.java
 package com.tr.rms.modules.reservation.service;
 
+import com.tr.rms.exception.DataNotFoundException;
 import com.tr.rms.modules.reservation.dto.*;
 import com.tr.rms.modules.reservation.entity.Reservation;
 import com.tr.rms.modules.reservation.entity.ReservationStatus;
 import com.tr.rms.modules.reservation.repository.ReservationRepository;
+import com.tr.rms.modules.reservation.specification.ReservationSpecification;
 import com.tr.rms.modules.user.entity.User;
 import com.tr.rms.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,15 +77,15 @@ public class ReservationService {
     @Transactional
     public ReservationResponse updateStatus(UUID id, ReservationStatus status, Authentication auth) {
         Reservation res = reservationRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Reservierung nicht gefunden"));
+                .orElseThrow(() -> new DataNotFoundException("Reservierung nicht gefunden"));
         res.setStatus(status);
         return mapToResponse(reservationRepository.save(res), res.getUser().getUsername());
     }
 
     private User getCurrentUser(Authentication auth) {
         String username = auth.getName();
-        return (User) userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalStateException("User not found"));
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
     }
 
     private ReservationResponse mapToResponse(Reservation r, String username) {
@@ -105,19 +108,36 @@ public class ReservationService {
         );
     }
 
-    public ReservationListResponse getReservations(int page, int size) {
+    public ReservationListResponse getReservations(
+            int page,
+            int size,
+            ReservationStatus status,
+            LocalDate reservationDate,
+            String search
+    ) {
         page--;
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<Reservation> reservations = reservationRepository.findAll(pageable);
-        return new ReservationListResponse(reservations
-                .stream()
-                .map(r -> mapToResponse(r, r.getUser().getUsername()))
-                .toList(),
+
+        Specification<Reservation> specification =
+                ReservationSpecification.hasStatus(status)
+                        .and(ReservationSpecification.hasReservationDate(reservationDate))
+                        .and(ReservationSpecification.searchLike(search));
+
+        Page<Reservation> reservations =
+                reservationRepository.findAll(specification, pageable);
+
+        return new ReservationListResponse(
+                reservations.stream()
+                        .map(r -> mapToResponse(r, r.getUser().getUsername()))
+                        .toList(),
                 reservations.getTotalElements(),
                 reservations.getTotalPages(),
                 reservations.getNumber(),
                 reservations.getSize(),
                 reservations.isFirst(),
-                reservations.isLast());
+                reservations.isLast()
+        );
     }
+
 }

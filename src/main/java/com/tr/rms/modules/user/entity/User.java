@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
+@Where(clause = "is_deleted = false")
 @Table(name = "users", schema = "rms")
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor

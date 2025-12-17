@@ -3,7 +3,6 @@ package com.tr.rms.modules.user.mapper;
 import com.tr.rms.modules.user.dto.UserRequest;
 import com.tr.rms.modules.user.dto.UserResponse;
 import com.tr.rms.modules.user.entity.User;
-import com.tr.rms.modules.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -24,6 +23,7 @@ public class UserMapper {
     public UserResponse toResponse(User user) {
         return new UserResponse(
                 user.getId(),
+                user.getUsername(),
                 user.getName(),
                 user.getEmail()
         );
