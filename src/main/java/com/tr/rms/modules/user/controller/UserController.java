@@ -1,13 +1,11 @@
 package com.tr.rms.modules.user.controller;
 
+import com.tr.rms.modules.user.dto.UserListResponse;
 import com.tr.rms.modules.user.dto.UserRequest;
 import com.tr.rms.modules.user.dto.UserResponse;
 import com.tr.rms.modules.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,8 +21,9 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserResponse> getAll() {
-        return userService.getAll();
+    public UserListResponse getAll(@RequestParam(defaultValue = "1") int page,
+                                    @RequestParam(defaultValue = "2") int size) {
+        return userService.getAll(page, size);
     }
 
     @GetMapping("/{id}")

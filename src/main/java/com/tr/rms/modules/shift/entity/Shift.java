@@ -22,8 +22,8 @@ public class Shift {
 
     @Id
     @GeneratedValue
-    @Column(name = "shift_id", updatable = false, columnDefinition = "uuid")
-    private UUID shiftId;
+    @Column(name = "id", updatable = false, columnDefinition = "uuid")
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
