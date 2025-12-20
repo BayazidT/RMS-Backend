@@ -1,6 +1,8 @@
 package com.tr.rms.modules.shift.service;
 
 import com.tr.rms.exception.DataNotFoundException;
+import com.tr.rms.modules.reservation.entity.Reservation;
+import com.tr.rms.modules.reservation.specification.ReservationSpecification;
 import com.tr.rms.modules.shift.dto.ShiftListResponse;
 import com.tr.rms.modules.shift.dto.ShiftRequest;
 import com.tr.rms.modules.shift.dto.ShiftResponse;
@@ -8,10 +10,12 @@ import com.tr.rms.modules.shift.entity.Shift;
 import com.tr.rms.modules.shift.entity.WeeklySchedule;
 import com.tr.rms.modules.shift.repository.ShiftRepository;
 import com.tr.rms.modules.shift.repository.WeeklyScheduleRepository;
+import com.tr.rms.modules.shift.specification.ShiftSpecification;
 import com.tr.rms.modules.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -58,8 +62,10 @@ public class ShiftService {
         return shift;
     }
 
-    public ShiftResponse getSingleShift(UUID userId) {
-        return toResponse(shiftRepository.findByUserId(userId));
+    public List<ShiftResponse> getSingleShift(UUID userId) {
+        List<Shift> responses = shiftRepository.findByUserId(userId);
+        List<ShiftResponse> shiftResponses = responses.stream().map(this::toResponse).toList();
+        return shiftResponses;
     }
 
     public String createShifts(ShiftRequest req) {
@@ -87,11 +93,15 @@ public class ShiftService {
         return date.getDayOfWeek().getValue()+5;
     }
 
-    public ShiftListResponse getShifts(int page, int size) {
+    public ShiftListResponse getShifts(int page, int size, LocalDate shiftDate, String search) {
         page--;
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Shift> shiftPage = shiftRepository.findAllToday(pageable);
+
+        Specification<Shift> specification =
+                ShiftSpecification.hasShiftDate(shiftDate)
+                        .and(ShiftSpecification.searchLike(search));
+        Page<Shift> shiftPage = shiftRepository.findAll(specification, pageable);
 
         List<ShiftResponse> responses = shiftPage.getContent()
                 .stream()

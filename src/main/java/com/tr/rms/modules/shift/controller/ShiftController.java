@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @RequestMapping("/api/v1/private/shift")
@@ -20,16 +22,17 @@ public class ShiftController {
 
     @PostMapping("/create")
     public ResponseEntity<String> create(@RequestBody ShiftRequest req) {
-        System.out.println("Called!");
         return ResponseEntity.ok(shiftService.createShifts(req));
     }
 
-    @GetMapping("/today")
+    @GetMapping("/list")
     public ShiftListResponse getTodayShifts(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) LocalDate shiftDate,
+            @RequestParam(required = false) String search
     ) {
-        return shiftService.getShifts(page, size);
+        return shiftService.getShifts(page, size, shiftDate, search);
     }
 
 
@@ -39,7 +42,7 @@ public class ShiftController {
     }
 
     @GetMapping("/single/{userId}")
-    public ShiftResponse getSingleShift(@PathVariable UUID userId) {
+    public List<ShiftResponse> getSingleShift(@PathVariable UUID userId) {
         return shiftService.getSingleShift(userId);
     }
 
