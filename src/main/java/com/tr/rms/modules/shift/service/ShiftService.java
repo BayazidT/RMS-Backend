@@ -41,7 +41,7 @@ public class ShiftService {
     private ShiftResponse toResponse(Shift shift) {
         return new ShiftResponse(
                 shift.getId(),
-                shift.getUser().getId(),
+                shift.getUser().getName(),
                 shift.getShiftDate(),
                 shift.getStartTime(),
                 shift.getEndTime(),
@@ -113,7 +113,9 @@ public class ShiftService {
                 shiftPage.getTotalPages(),
                 page+1,
                 size,
-                responses
+                responses,
+                shiftPage.isFirst(),
+                shiftPage.isLast()
         );
     }
 
