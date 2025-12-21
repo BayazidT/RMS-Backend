@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public record ShiftResponse(
         UUID id,
-        UUID userId,
+        String name,
         LocalDate shiftDate,
         OffsetDateTime startTime,
         OffsetDateTime endTime,
