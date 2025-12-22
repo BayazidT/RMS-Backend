@@ -1,27 +1,65 @@
 package com.tr.rms.modules.shift.dto;
 
-import lombok.RequiredArgsConstructor;
-
 import java.time.LocalTime;
-import java.util.UUID;
-// 1. DTO for the weekly pattern (what you edit once per employee)
+
 public record WeeklyScheduleRequest(
-        // One entry per day – Monday = 1 … Sunday = 7
-        DaySchedule monday,    // Tag 1
+        DaySchedule monday,
         DaySchedule tuesday,
         DaySchedule wednesday,
         DaySchedule thursday,
         DaySchedule friday,
         DaySchedule saturday,
         DaySchedule sunday
-
 ) {
+
+    public static WeeklyScheduleRequest defaultSchedule() {
+        return new WeeklyScheduleRequest(
+                workingDay(1, "Montag", "10:00", "18:00"),
+                workingDay(2, "Dienstag", "11:00", "18:00"),
+                workingDay(3, "Mittwoch", "12:00", "18:00"),
+                workingDay(4, "Donnerstag", "10:00", "18:00"),
+                workingDay(5, "Freitag", "10:00", "22:00"),
+                offDay(6, "Samstag"),
+                offDay(7, "Sonntag")
+        );
+    }
+
+    private static DaySchedule workingDay(
+            int dayOfWeek,
+            String dayNameGerman,
+            String start,
+            String end
+    ) {
+        return new DaySchedule(
+                dayOfWeek,
+                dayNameGerman,
+                LocalTime.parse(start),
+                LocalTime.parse(end),
+                false,
+                start + " – " + end + " Uhr"
+        );
+    }
+
+    private static DaySchedule offDay(
+            int dayOfWeek,
+            String dayNameGerman
+    ) {
+        return new DaySchedule(
+                dayOfWeek,
+                dayNameGerman,
+                null,
+                null,
+                true,
+                "Frei"
+        );
+    }
+
     public record DaySchedule(
-            int     dayOfWeek,              // 1 = Montag … 7 = Sonntag
-            String  dayNameGerman,          // "Montag", "Dienstag" …
-            LocalTime startTime,            // null = frei
-            LocalTime endTime,              // null = frei
-            boolean isOff,                   // true = frei
-            String  displayText             // "10:00 – 18:00 Uhr" oder "Frei"
+            int dayOfWeek,
+            String dayNameGerman,
+            LocalTime startTime,
+            LocalTime endTime,
+            boolean isOff,
+            String displayText
     ) { }
 }
