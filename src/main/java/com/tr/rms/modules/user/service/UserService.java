@@ -1,12 +1,15 @@
 package com.tr.rms.modules.user.service;
 
 import com.tr.rms.exception.DataNotFoundException;
+import com.tr.rms.modules.shift.dto.WeeklyScheduleRequest;
+import com.tr.rms.modules.shift.service.WeeklyScheduleService;
 import com.tr.rms.modules.user.dto.UserListResponse;
 import com.tr.rms.modules.user.dto.UserRequest;
 import com.tr.rms.modules.user.dto.UserResponse;
 import com.tr.rms.modules.user.entity.User;
 import com.tr.rms.modules.user.mapper.UserMapper;
 import com.tr.rms.modules.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,12 +24,16 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final WeeklyScheduleService weeklyScheduleService;
     private final UserMapper mapper;
 
+    @Transactional
     public UserResponse create(UserRequest request) {
         User saved = userRepository.save(mapper.toEntity(request));
+        weeklyScheduleService.initializeDefaultSchedule(saved.getId());
         return mapper.toResponse(saved);
     }
+
 
     public UserListResponse getAll(int page, int size) {
         page--;
@@ -66,4 +73,5 @@ public class UserService {
         user.setActive(false);
         userRepository.save(user);
     }
+
 }

@@ -19,6 +19,11 @@ public class WeeklyScheduleService {
 
     private final WeeklyScheduleRepository weeklyScheduleRepository;
 
+    public void initializeDefaultSchedule(UUID userId) {
+        createOrUpdate(userId, WeeklyScheduleRequest.defaultSchedule());
+    }
+
+
     // CREATE / UPDATE weekly pattern
     @Transactional
     public WeeklyScheduleResponse createOrUpdate(UUID userId, WeeklyScheduleRequest request) {
