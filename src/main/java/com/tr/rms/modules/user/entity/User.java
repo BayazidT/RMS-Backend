@@ -72,7 +72,7 @@ public class User implements UserDetails {
         // Add permissions
         roles.stream()
                 .flatMap(role -> role.getRolePermissions().stream())
-                .map(perm -> new SimpleGrantedAuthority(perm.getRole().getName()))
+                .map(perm -> new SimpleGrantedAuthority(perm.getPermission().getName()))
                 .forEach(authorities::add);
 
         return authorities;

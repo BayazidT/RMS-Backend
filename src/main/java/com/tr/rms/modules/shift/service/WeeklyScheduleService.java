@@ -39,7 +39,6 @@ public class WeeklyScheduleService {
                 fromDay(request.sunday(),    7, user)
         );
 
-        // Optional: delete old ones first to avoid duplicates on update
         weeklyScheduleRepository.deleteAllByUserId(userId);
         weeklyScheduleRepository.saveAll(schedules);
 
@@ -53,6 +52,7 @@ public class WeeklyScheduleService {
         e.setStartTime(daySchedule.startTime());
         e.setEndTime(daySchedule.endTime());
         e.setOff(daySchedule.isOff());
+        e.setHalf(daySchedule.isHalf());
         return e;
     }
 
@@ -117,6 +117,7 @@ public class WeeklyScheduleService {
                     null,
                     null,
                     true,
+                    false,
                     "Frei"
             );
         }
@@ -128,6 +129,7 @@ public class WeeklyScheduleService {
                 entity.getStartTime(),
                 entity.getEndTime(),
                 false,
+                entity.isHalf(),
                 display
         );
     }
@@ -150,6 +152,7 @@ public class WeeklyScheduleService {
                 null,
                 null,
                 true,
+                false,
                 "Frei"
         );
     }

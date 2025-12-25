@@ -16,6 +16,7 @@ public class UserMapper {
                 .name(request.name())
                 .username(request.username())
                 .email(request.email())
+                .active(true)
                 .password(passwordEncoder.encode(request.password()))
                 .build();
     }
