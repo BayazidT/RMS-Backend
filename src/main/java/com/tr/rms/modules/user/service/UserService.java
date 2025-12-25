@@ -9,6 +9,7 @@ import com.tr.rms.modules.user.dto.UserResponse;
 import com.tr.rms.modules.user.entity.User;
 import com.tr.rms.modules.user.mapper.UserMapper;
 import com.tr.rms.modules.user.repository.UserRepository;
+import com.tr.rms.rbac.service.UserRoleService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,12 +26,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final WeeklyScheduleService weeklyScheduleService;
+    private final UserRoleService userRoleService;
     private final UserMapper mapper;
 
     @Transactional
     public UserResponse create(UserRequest request) {
         User saved = userRepository.save(mapper.toEntity(request));
         weeklyScheduleService.initializeDefaultSchedule(saved.getId());
+        userRoleService.setUserRole(saved.getId(), request.roleId());
         return mapper.toResponse(saved);
     }
 

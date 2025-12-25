@@ -36,6 +36,7 @@ public record WeeklyScheduleRequest(
                 LocalTime.parse(start),
                 LocalTime.parse(end),
                 false,
+                false,
                 start + " – " + end + " Uhr"
         );
     }
@@ -50,6 +51,7 @@ public record WeeklyScheduleRequest(
                 null,
                 null,
                 true,
+                false,
                 "Frei"
         );
     }
@@ -60,6 +62,7 @@ public record WeeklyScheduleRequest(
             LocalTime startTime,
             LocalTime endTime,
             boolean isOff,
+            boolean isHalf,
             String displayText
     ) { }
 }

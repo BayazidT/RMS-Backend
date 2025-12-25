@@ -5,6 +5,7 @@ import com.tr.rms.modules.user.dto.UserRequest;
 import com.tr.rms.modules.user.dto.UserResponse;
 import com.tr.rms.modules.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('user:read')")
     public UserListResponse getAll(@RequestParam(defaultValue = "1") int page,
                                     @RequestParam(defaultValue = "2") int size) {
         return userService.getAll(page, size);
