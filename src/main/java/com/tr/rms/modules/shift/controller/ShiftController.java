@@ -41,9 +41,16 @@ public class ShiftController {
         return shiftService.create(shiftRequest, userId);
     }
 
-    @GetMapping("/single/{userId}")
-    public List<ShiftResponse> getSingleShift(@PathVariable UUID userId) {
-        return shiftService.getSingleShift(userId);
+    @GetMapping("/range/{userId}")
+    public ShiftListResponse getShiftsByUserId(@PathVariable UUID userId,
+                                                 @RequestParam(defaultValue = "1") int page,
+    @RequestParam(defaultValue = "10") int size,
+    @RequestParam(required = false) LocalDate fromDate,
+    @RequestParam(required = false) LocalDate toDate,
+    @RequestParam(required = false) String search
+
+    ) {
+        return shiftService.getShiftsByUserId(userId, page, size, fromDate, toDate, search);
     }
 
 }

@@ -19,12 +19,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,10 +58,31 @@ public class ShiftService {
         return shift;
     }
 
-    public List<ShiftResponse> getSingleShift(UUID userId) {
-        List<Shift> responses = shiftRepository.findByUserId(userId);
-        List<ShiftResponse> shiftResponses = responses.stream().map(this::toResponse).toList();
-        return shiftResponses;
+    public ShiftListResponse getShiftsByUserId(UUID userId, int page, int size, LocalDate fromDate, LocalDate toDate, String search) {
+        page--;
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        Specification<Shift> specification =
+                ShiftSpecification.hasShiftDateRange(fromDate, toDate)
+                        .and(ShiftSpecification.hasUserId(userId))
+                        .and(ShiftSpecification.searchLike(search));
+        Page<Shift> shiftPage = shiftRepository.findAll(specification, pageable);
+
+        List<ShiftResponse> responses = shiftPage.getContent()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+
+        return new ShiftListResponse(
+                shiftPage.getTotalElements(),
+                shiftPage.getTotalPages(),
+                page+1,
+                size,
+                responses,
+                shiftPage.isFirst(),
+                shiftPage.isLast()
+        );
     }
 
     public String createShifts(ShiftRequest req) {
