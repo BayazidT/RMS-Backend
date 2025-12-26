@@ -6,7 +6,6 @@ import com.tr.rms.rbac.entity.UserRole;
 import com.tr.rms.rbac.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
