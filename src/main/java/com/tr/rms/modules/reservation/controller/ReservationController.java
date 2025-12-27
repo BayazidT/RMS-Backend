@@ -33,7 +33,7 @@ public class ReservationController {
 
     @GetMapping
     public ResponseEntity<ReservationListResponse> get(
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) ReservationStatus status,
             @RequestParam(required = false) LocalDate reservationDate,

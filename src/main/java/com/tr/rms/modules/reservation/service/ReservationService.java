@@ -115,8 +115,6 @@ public class ReservationService {
             LocalDate reservationDate,
             String search
     ) {
-        page--;
-
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Reservation> specification =

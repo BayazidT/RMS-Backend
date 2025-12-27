@@ -27,7 +27,7 @@ public class ShiftController {
 
     @GetMapping("/list")
     public ShiftListResponse getTodayShifts(
-            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) LocalDate shiftDate,
             @RequestParam(required = false) String search
@@ -43,7 +43,7 @@ public class ShiftController {
 
     @GetMapping("/range/{userId}")
     public ShiftListResponse getShiftsByUserId(@PathVariable UUID userId,
-                                                 @RequestParam(defaultValue = "1") int page,
+                                                 @RequestParam(defaultValue = "0") int page,
     @RequestParam(defaultValue = "10") int size,
     @RequestParam(required = false) LocalDate fromDate,
     @RequestParam(required = false) LocalDate toDate,

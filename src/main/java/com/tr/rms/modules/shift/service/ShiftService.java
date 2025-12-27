@@ -1,8 +1,6 @@
 package com.tr.rms.modules.shift.service;
 
 import com.tr.rms.exception.DataNotFoundException;
-import com.tr.rms.modules.reservation.entity.Reservation;
-import com.tr.rms.modules.reservation.specification.ReservationSpecification;
 import com.tr.rms.modules.shift.dto.ShiftListResponse;
 import com.tr.rms.modules.shift.dto.ShiftRequest;
 import com.tr.rms.modules.shift.dto.ShiftResponse;
@@ -59,7 +57,6 @@ public class ShiftService {
     }
 
     public ShiftListResponse getShiftsByUserId(UUID userId, int page, int size, LocalDate fromDate, LocalDate toDate, String search) {
-        page--;
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -77,7 +74,7 @@ public class ShiftService {
         return new ShiftListResponse(
                 shiftPage.getTotalElements(),
                 shiftPage.getTotalPages(),
-                page+1,
+                page,
                 size,
                 responses,
                 shiftPage.isFirst(),
@@ -111,8 +108,6 @@ public class ShiftService {
     }
 
     public ShiftListResponse getShifts(int page, int size, LocalDate shiftDate, String search) {
-        page--;
-
         Pageable pageable = PageRequest.of(page, size);
 
         Specification<Shift> specification =
@@ -128,7 +123,7 @@ public class ShiftService {
         return new ShiftListResponse(
                 shiftPage.getTotalElements(),
                 shiftPage.getTotalPages(),
-                page+1,
+                page,
                 size,
                 responses,
                 shiftPage.isFirst(),

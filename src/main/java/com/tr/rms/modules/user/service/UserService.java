@@ -39,7 +39,6 @@ public class UserService {
 
 
     public UserListResponse getAll(int page, int size) {
-        page--;
         Pageable pageable = PageRequest.of(page, size);
         Page<User> userResponses=  userRepository.findAll(pageable);
         return new UserListResponse(
@@ -48,7 +47,7 @@ public class UserService {
                         .toList(),
                 userResponses.getTotalElements(),
                 userResponses.getTotalPages(),
-                userResponses.getNumber()+1,
+                userResponses.getNumber(),
                 userResponses.getSize(),
                 userResponses.isFirst(),
                 userResponses.isLast()
