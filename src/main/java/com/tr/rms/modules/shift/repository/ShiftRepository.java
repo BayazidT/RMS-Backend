@@ -23,4 +23,6 @@ public interface ShiftRepository extends JpaRepository<Shift, UUID> {
     List<Shift> findAllShiftDate(int dayOfWeek);
 
     List<Shift> findByShiftDate(LocalDate localDate);
+
+    Shift findByUserIdAndShiftDate(UUID userId, LocalDate localDate);
 }

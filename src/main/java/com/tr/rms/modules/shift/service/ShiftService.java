@@ -1,5 +1,6 @@
 package com.tr.rms.modules.shift.service;
 
+import com.tr.rms.exception.DuplicateEntryException;
 import com.tr.rms.exception.DataNotFoundException;
 import com.tr.rms.modules.shift.dto.ShiftListResponse;
 import com.tr.rms.modules.shift.dto.ShiftRequest;
@@ -30,8 +31,13 @@ public class ShiftService {
     private final ShiftRepository shiftRepository;
     private final WeeklyScheduleRepository weeklyScheduleRepository;
 
-    public ShiftResponse create(ShiftRequest shiftRequest, UUID userId) {
-        return toResponse(shiftRepository.save(mapToShiftEntity(shiftRequest,userId)));
+    public String create(ShiftRequest shiftRequest, UUID userId) {
+        Shift exsitShift = shiftRepository.findByUserIdAndShiftDate(userId, shiftRequest.shiftDate());
+        if (exsitShift != null) {
+            throw new DuplicateEntryException("Shift already exist for " + exsitShift.getUser().getName());
+        }
+        shiftRepository.save(mapToShiftEntity(shiftRequest,userId));
+        return "Shift created";
     }
 
     private ShiftResponse toResponse(Shift shift) {
