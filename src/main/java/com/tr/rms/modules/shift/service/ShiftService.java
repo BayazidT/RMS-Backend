@@ -1,5 +1,6 @@
 package com.tr.rms.modules.shift.service;
 
+import com.tr.rms.exception.DuplicateEntryException;
 import com.tr.rms.exception.DataNotFoundException;
 import com.tr.rms.modules.shift.dto.ShiftListResponse;
 import com.tr.rms.modules.shift.dto.ShiftRequest;
@@ -20,7 +21,9 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +31,13 @@ public class ShiftService {
     private final ShiftRepository shiftRepository;
     private final WeeklyScheduleRepository weeklyScheduleRepository;
 
-    public ShiftResponse create(ShiftRequest shiftRequest, UUID userId) {
-        return toResponse(shiftRepository.save(mapToShiftEntity(shiftRequest,userId)));
+    public String create(ShiftRequest shiftRequest, UUID userId) {
+        Shift exsitShift = shiftRepository.findByUserIdAndShiftDate(userId, shiftRequest.shiftDate());
+        if (exsitShift != null) {
+            throw new DuplicateEntryException("Shift already exist for " + exsitShift.getUser().getName());
+        }
+        shiftRepository.save(mapToShiftEntity(shiftRequest,userId));
+        return "Shift created";
     }
 
     private ShiftResponse toResponse(Shift shift) {
@@ -83,22 +91,40 @@ public class ShiftService {
     }
 
     public String createShifts(ShiftRequest req) {
-        List<WeeklySchedule> weeklySchedules =weeklyScheduleRepository.findAllToday(getDayOfWeek(req.shiftDate()), false);
-        if(weeklySchedules.size()==0){
+        List<WeeklySchedule> weeklySchedules = weeklyScheduleRepository
+                .findAllToday(getDayOfWeek(req.shiftDate()), false);
+
+        if (weeklySchedules.isEmpty()) {
             throw new DataNotFoundException("No active weekly schedules found for the selected date");
         }
-        List<Shift> shifts = new ArrayList<>();
+
+        List<Shift> existingShifts = shiftRepository
+                .findByShiftDate(req.shiftDate());
+
+        Set<UUID> userIdsWithExistingShift = existingShifts.stream()
+                .map(shift -> shift.getUser().getId())
+                .collect(Collectors.toSet());
+
+        List<Shift> newShifts = new ArrayList<>();
         for (WeeklySchedule weeklySchedule : weeklySchedules) {
+            UUID userId = weeklySchedule.getUser().getId();
+
+            if (userIdsWithExistingShift.contains(userId)) {
+                continue;
+            }
             Shift shift = new Shift();
             shift.setUser(weeklySchedule.getUser());
             shift.setShiftDate(req.shiftDate());
             shift.setStartTime(req.startTime());
             shift.setEndTime(req.endTime());
-            shifts.add(shift);
+            newShifts.add(shift);
         }
-        shiftRepository.saveAll(shifts);
-        return "Created shift for today";
-
+        if (!newShifts.isEmpty()) {
+            shiftRepository.saveAll(newShifts);
+            return "Created " + newShifts.size() + " new shift(s). Skipped duplicates.";
+        } else {
+            return "No new shifts created — all employees already have shifts for this date.";
+        }
     }
     private int getDayOfWeek(LocalDate date){
         if(date.getDayOfWeek().getValue() > 2){

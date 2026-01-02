@@ -37,7 +37,7 @@ public class ShiftController {
 
 
     @PostMapping("/single/{userId}")
-    public ShiftResponse createSingleShift(@RequestBody ShiftRequest shiftRequest, @PathVariable UUID userId) {
+    public String createSingleShift(@RequestBody ShiftRequest shiftRequest, @PathVariable UUID userId) {
         return shiftService.create(shiftRequest, userId);
     }
 
