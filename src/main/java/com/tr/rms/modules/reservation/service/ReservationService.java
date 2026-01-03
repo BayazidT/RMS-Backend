@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,6 @@ public class ReservationService {
     @Transactional
     public ReservationResponse create(ReservationRequest request, Authentication auth) {
         User user = getCurrentUser(auth);
-        // Check if table is free
         boolean tableTaken = reservationRepository.findByDateAndTable(request.reservationDate(), request.tableNumber())
                 .stream()
                 .anyMatch(r -> r.getStatus() != ReservationStatus.CANCELLED && r.getStatus() != ReservationStatus.NO_SHOW);
@@ -115,7 +115,8 @@ public class ReservationService {
             LocalDate reservationDate,
             String search
     ) {
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Specification<Reservation> specification =
                 ReservationSpecification.hasStatus(status)

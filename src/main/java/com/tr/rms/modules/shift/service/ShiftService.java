@@ -14,6 +14,7 @@ import com.tr.rms.modules.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +67,8 @@ public class ShiftService {
 
     public ShiftListResponse getShiftsByUserId(UUID userId, int page, int size, LocalDate fromDate, LocalDate toDate, String search) {
 
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = Sort.by(Sort.Direction.DESC, "shiftDate");
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Specification<Shift> specification =
                 ShiftSpecification.hasShiftDateRange(fromDate, toDate)
