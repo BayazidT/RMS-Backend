@@ -1,7 +1,6 @@
 package com.tr.rms.modules.user.service;
 
 import com.tr.rms.exception.DataNotFoundException;
-import com.tr.rms.modules.shift.dto.WeeklyScheduleRequest;
 import com.tr.rms.modules.shift.service.WeeklyScheduleService;
 import com.tr.rms.modules.user.dto.UserListResponse;
 import com.tr.rms.modules.user.dto.UserRequest;
@@ -15,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,7 +39,8 @@ public class UserService {
 
 
     public UserListResponse getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page, size, sort);
         Page<User> userResponses=  userRepository.findAll(pageable);
         return new UserListResponse(
                 userResponses.stream()

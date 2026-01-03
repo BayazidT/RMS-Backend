@@ -40,7 +40,7 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private ReservationStatus status = ReservationStatus.PENDING;
+    private ReservationStatus status = ReservationStatus.CONFIRMED;
 
     @Column(name = "customer_name", nullable = false)
     private String customerName;
