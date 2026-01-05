@@ -52,6 +52,7 @@ public class SecurityConfig {
 
         // Allow your React app's URL
         config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
 
         // Allow headers and methods
         config.setAllowedHeaders(List.of("*"));
