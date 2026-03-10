@@ -53,4 +53,10 @@ public class ShiftController {
         return shiftService.getShiftsByUserId(userId, page, size, fromDate, toDate, search);
     }
 
+    @DeleteMapping("/single/{shiftId}")
+    public ResponseEntity<String> deleteShift(@PathVariable UUID shiftId) {
+        shiftService.deleteShift(shiftId);
+        return ResponseEntity.ok("Deleted shift successfully");
+    }
+
 }
