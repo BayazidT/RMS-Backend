@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Where;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
@@ -16,6 +18,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "shifts",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "shift_date"}))
+@Where(clause = "is_deleted = false")
 @Getter @Setter @NoArgsConstructor
 @ToString(exclude = "user")
 public class Shift {
@@ -38,6 +41,8 @@ public class Shift {
     @Column(name = "end_time", nullable = false)
     private OffsetDateTime endTime;
 
+    @Column(name = "is_deleted")
+    private Boolean deleted;
     // Helper to get just the time part in restaurant timezone (for display)
     public LocalTime getStartTimeLocal() {
         return startTime.atZoneSameInstant(ZoneId.of(getRestaurantTimezone())).toLocalTime();

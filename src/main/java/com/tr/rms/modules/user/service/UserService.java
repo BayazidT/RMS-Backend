@@ -1,6 +1,8 @@
 package com.tr.rms.modules.user.service;
 
 import com.tr.rms.exception.DataNotFoundException;
+import com.tr.rms.modules.shift.entity.Shift;
+import com.tr.rms.modules.shift.service.ShiftService;
 import com.tr.rms.modules.shift.service.WeeklyScheduleService;
 import com.tr.rms.modules.user.dto.UserListResponse;
 import com.tr.rms.modules.user.dto.UserRequest;
@@ -28,6 +30,7 @@ public class UserService {
     private final WeeklyScheduleService weeklyScheduleService;
     private final UserRoleService userRoleService;
     private final UserMapper mapper;
+    private final ShiftService shiftService;
 
     @Transactional
     public UserResponse create(UserRequest request) {
@@ -72,6 +75,7 @@ public class UserService {
 
     public void delete(UUID id) {
         User user = userRepository.findActiveUserById(id).orElseThrow(() -> new DataNotFoundException("User not found"));
+       shiftService.deleteShiftsByUserId(id);
         user.setDeleted(true);
         user.setActive(false);
         userRepository.save(user);

@@ -6,6 +6,8 @@ CREATE TABLE shifts (
                         shift_date      DATE    NOT NULL,
                         start_time      TIMESTAMPTZ NOT NULL,
                         end_time        TIMESTAMPTZ NOT NULL,
+                        is_deleted BOOLEAN NOT NULL DEFAULT FALSE,  -- Soft delete flag
+
 
                         CONSTRAINT chk_end_after_start CHECK (end_time > start_time),
                         UNIQUE(user_id, shift_date)

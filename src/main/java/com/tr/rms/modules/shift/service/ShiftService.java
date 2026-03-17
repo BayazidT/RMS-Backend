@@ -62,6 +62,7 @@ public class ShiftService {
         shift.setShiftDate(req.shiftDate());
         shift.setStartTime(req.startTime());
         shift.setEndTime(req.endTime());
+        shift.setDeleted(false);
         return shift;
     }
 
@@ -90,6 +91,12 @@ public class ShiftService {
                 shiftPage.isFirst(),
                 shiftPage.isLast()
         );
+    }
+
+    public void deleteShiftsByUserId(UUID userId) {
+        List<Shift> shifts = shiftRepository.findAllByUserId(userId);
+        shifts.forEach(shift -> shift.setDeleted(true));
+        shiftRepository.saveAll(shifts);
     }
 
     public String createShifts(ShiftRequest req) {
@@ -158,5 +165,17 @@ public class ShiftService {
                 shiftPage.isLast()
         );
     }
+//    public void deleteShift(UUID shiftId) {
+//        Shift shift = shiftRepository.findById(shiftId).orElse(null);
+//
+//        if (shift == null) {
+//            throw new DataNotFoundException("No shift found for " + shiftId);
+//        }
+//        shift.setDeleted(true);
+//        shiftRepository.save(shift);
+//    }
 
+    public void deleteShift(UUID shiftId) {
+        shiftRepository.deleteById(shiftId);
+    }
 }
