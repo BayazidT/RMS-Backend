@@ -1,9 +1,10 @@
-CREATE TABLE rms.users (
+CREATE TABLE eis_cafe.users (
                            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                            username VARCHAR NOT NULL,
                            name VARCHAR NULL,
                            password VARCHAR NOT NULL,
                            email VARCHAR NULL,
+                           phone VARCHAR NULL,
                            is_active BOOLEAN NOT NULL DEFAULT TRUE,
                            is_deleted BOOLEAN NOT NULL DEFAULT FALSE,  -- Soft delete flag
                            failed_login_attempts INT DEFAULT 0,
