@@ -44,6 +44,7 @@ CREATE TABLE roles (
                        name        VARCHAR(100)    NOT NULL,
                        description TEXT,
                        is_system   BOOLEAN         NOT NULL DEFAULT FALSE, -- protect built-in roles
+                       is_active   BOOLEAN         NOT NULL DEFAULT TRUE, -- protect built-in roles
                        created_at  TIMESTAMPTZ     NOT NULL DEFAULT NOW()
 );
 
@@ -85,12 +86,12 @@ CREATE TABLE user_roles (
 -- ════════════════════════════════════════════════════════════════════════════════
 
 -- Roles
-INSERT INTO roles (code, name, description, is_system) VALUES
-                                                           ('USER',          'Regular User',         'Standard registered user',               true),
-                                                           ('VERIFIED',      'Verified Account',     'Verified creator / public figure',       true),
-                                                           ('MODERATOR',     'Moderator',            'Content & user moderation',              true),
-                                                           ('ADMIN',         'Administrator',        'Full system access',                     true),
-                                                           ('PREMIUM',       'Premium Member',       'Paid features & badge',                  false);
+INSERT INTO roles (code, name, description, is_system, is_active) VALUES
+                                                           ('USER',          'Regular User',         'Standard registered user',               true, true),
+                                                           ('VERIFIED',      'Verified Account',     'Verified creator / public figure',       true, true),
+                                                           ('MODERATOR',     'Moderator',            'Content & user moderation',              true, true),
+                                                           ('ADMIN',         'Administrator',        'Full system access',                     true, true),
+                                                           ('PREMIUM',       'Premium Member',       'Paid features & badge',                  false, true);
 
 -- Permissions (most common ones for social app)
 INSERT INTO permissions (code, name, module, description) VALUES

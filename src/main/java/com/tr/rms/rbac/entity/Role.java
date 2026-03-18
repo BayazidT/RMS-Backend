@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "roles", schema = "rms")
+@Table(name = "roles", schema = "eis_cafe")
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
 public class Role {
@@ -32,8 +32,8 @@ public class Role {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
+//    @UpdateTimestamp
+//    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<RolePermission> rolePermissions = new HashSet<>();

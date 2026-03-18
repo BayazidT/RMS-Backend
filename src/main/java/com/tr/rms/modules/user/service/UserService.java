@@ -35,7 +35,7 @@ public class UserService {
     @Transactional
     public UserResponse create(UserRequest request) {
         User saved = userRepository.save(mapper.toEntity(request));
-        weeklyScheduleService.initializeDefaultSchedule(saved.getId());
+//        weeklyScheduleService.initializeDefaultSchedule(saved.getId());
         userRoleService.setUserRole(saved.getId(), request.roleId());
         return mapper.toResponse(saved);
     }

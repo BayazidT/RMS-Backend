@@ -7,6 +7,7 @@ spring:
 
   jpa:
     hibernate:
+      schemas: eis_cafe
       ddl-auto: validate
     show-sql: true
     properties:
