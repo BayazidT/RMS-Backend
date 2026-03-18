@@ -18,7 +18,7 @@ import java.util.UUID;
 
 @Entity
 @Where(clause = "is_deleted = false")
-@Table(name = "users", schema = "rms")
+@Table(name = "users", schema = "eis_cafe")
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
 public class User implements UserDetails {

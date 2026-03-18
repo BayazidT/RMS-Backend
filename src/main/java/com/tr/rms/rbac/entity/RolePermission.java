@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "role_permissions", schema = "rms")
+@Table(name = "role_permissions", schema = "eis_cafe")
 @IdClass(RolePermissionId.class)
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
@@ -33,7 +33,7 @@ public class RolePermission {
     @JoinColumn(name = "permission_id")
     private Permission permission;
 
-    @CreationTimestamp
-    @Column(name = "granted_at")
-    private LocalDateTime grantedAt;
+//    @CreationTimestamp
+//    @Column(name = "granted_at")
+//    private LocalDateTime grantedAt;
 }

@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Entity
-@Table(name = "refresh_tokens", schema = "rms")
+@Table(name = "refresh_tokens", schema = "eis_cafe")
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
 public class RefreshToken {
@@ -32,7 +32,7 @@ public class RefreshToken {
     @Column(length = 45)
     private String createdFromIp;
 
-    private String createdFromUserAgent;
+//    private String createdFromUserAgent;
 
     public boolean isRevoked()   { return revokedAt != null; }
     public boolean isExpired()   { return Instant.now().isAfter(expiresAt); }
