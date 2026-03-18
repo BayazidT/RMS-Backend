@@ -31,7 +31,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/v1/public/**").permitAll()
+                        .requestMatchers("/api/v1/public/**").permitAll()
+                        .requestMatchers("/api/v1/public/auth/login").permitAll()
                         .requestMatchers("/api/v1/public/auth/register").permitAll()
                         .requestMatchers("/api/v1/private/users").permitAll()
                         .requestMatchers("/api/v1/private/roles").permitAll()
