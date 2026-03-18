@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "permissions", schema = "rms")
+@Table(name = "permissions", schema = "eis_cafe")
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
 public class Permission {
