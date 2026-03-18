@@ -16,6 +16,7 @@ public class UserMapper {
                 .name(request.name())
                 .username(request.username())
                 .email(request.email())
+                .phone(request.phone())
                 .active(true)
                 .password(passwordEncoder.encode(request.password()!=null?request.password():"123456"))
                 .build();
@@ -26,7 +27,8 @@ public class UserMapper {
                 user.getId(),
                 user.getUsername(),
                 user.getName(),
-                user.getEmail()
+                user.getEmail(),
+                user.getPhone()
         );
     }
 

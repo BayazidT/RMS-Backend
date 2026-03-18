@@ -16,7 +16,7 @@ import java.time.ZoneId;
 import java.util.UUID;
 
 @Entity
-@Table(name = "shifts",
+@Table(name = "shifts", schema = "eis_cafe",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "shift_date"}))
 @Where(clause = "is_deleted = false")
 @Getter @Setter @NoArgsConstructor
