@@ -34,6 +34,7 @@ public class User implements UserDetails {
 
     private String email;
     private String name;
+    private String phone;
 
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
