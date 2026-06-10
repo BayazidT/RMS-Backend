@@ -42,7 +42,7 @@ public class Shift {
     private OffsetDateTime endTime;
 
     @Column(name = "is_deleted")
-    private Boolean deleted;
+    private Boolean deleted = Boolean.FALSE;
     // Helper to get just the time part in restaurant timezone (for display)
     public LocalTime getStartTimeLocal() {
         return startTime.atZoneSameInstant(ZoneId.of(getRestaurantTimezone())).toLocalTime();
