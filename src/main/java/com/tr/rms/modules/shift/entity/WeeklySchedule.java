@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 @AllArgsConstructor@Entity
-@Table(name = "weekly_schedule")
+@Table(name = "weekly_schedule", schema = "eis_cafe")
 @Getter @Setter @NoArgsConstructor
 public class WeeklySchedule {
 
