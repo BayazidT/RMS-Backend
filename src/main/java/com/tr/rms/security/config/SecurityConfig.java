@@ -32,10 +32,12 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
 //                        .requestMatchers("/api/v1/public/**").permitAll()
-                        .requestMatchers("/api/v1/public/auth/register").permitAll()
-                        .requestMatchers("/api/v1/public/auth/login", "/error").permitAll()
-                        .requestMatchers("/api/auth/refresh").permitAll()
-                        .anyRequest().authenticated()
+                                .requestMatchers("/api/v1/public/auth/register").permitAll()
+                                .requestMatchers("/api/v1/private/users").permitAll()
+                                .requestMatchers("/api/v1/private/roles").permitAll()
+                                .requestMatchers("/api/v1/public/auth/login", "/error").permitAll()
+                                .requestMatchers("/api/auth/refresh").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
@@ -52,8 +54,8 @@ public class SecurityConfig {
 
         // Allow your React app's URL
         config.setAllowedOrigins(List.of("http://localhost:5173"));
-        config.setAllowedOrigins(List.of("http://localhost:3000"));
-        config.setAllowedOrigins(List.of("https://trbtree.com"));
+//        config.setAllowedOrigins(List.of("http://localhost:3000"));
+//        config.setAllowedOrigins(List.of("https://trbtree.com"));
 
         // Allow headers and methods
         config.setAllowedHeaders(List.of("*"));
