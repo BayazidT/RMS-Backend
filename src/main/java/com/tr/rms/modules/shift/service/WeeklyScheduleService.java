@@ -78,7 +78,7 @@ public class WeeklyScheduleService {
                 case 1 -> monday    = day;
                 case 2 -> tuesday   = day;
                 case 3 -> wednesday = day;
-                case 4 -> thursday  = null;
+                case 4 -> thursday  = day;
                 case 5 -> friday    = day;
                 case 6 -> saturday   = day;
                 case 7 -> sunday     = day;
