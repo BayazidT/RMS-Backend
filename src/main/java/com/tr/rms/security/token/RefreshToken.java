@@ -4,7 +4,6 @@ package com.tr.rms.security.token;
 import com.tr.rms.modules.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.Instant;
 import java.util.UUID;
 
@@ -15,6 +14,7 @@ import java.util.UUID;
 public class RefreshToken {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)  // ← ADD THIS LINE
     private UUID id = UUID.randomUUID();
 
     @ManyToOne
