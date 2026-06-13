@@ -139,4 +139,9 @@ public class ReservationService {
         );
     }
 
+    public void deleteReservation(UUID id) {
+        Reservation reservation = reservationRepository.findById(id).orElseThrow();
+        reservationRepository.delete(reservation);
+        reservationRepository.flush();
+    }
 }

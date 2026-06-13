@@ -64,4 +64,10 @@ public class ReservationController {
             Authentication auth) {
         return ResponseEntity.ok(service.updateStatus(id, status, auth));
     }
+
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable UUID id) {
+        service.deleteReservation(id);
+        return "Reservation deleted";
+    }
 }
